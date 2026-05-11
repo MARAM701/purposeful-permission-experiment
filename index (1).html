@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>QuickTaxi</title>
+    <!-- Corrected favicon link -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+    <!-- Link to the main CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Link to the instructions page CSS -->
+    <link rel="stylesheet" href="instructions.css">
+    <!-- Add Google Maps JavaScript API -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrNmGtQxFBqs76MR6PuaP-WimH0FEBj2U&libraries=places"></script>
+    <!-- Add Flatpickr library for date picking -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <!-- ✅ ADDED: neutral, study-safe helper styling (no red) -->
+    <style>
+        .needs-input {
+            border: 2px solid #94a3b8 !important;
+            /* neutral gray-blue */
+            background-color: #f8fafc !important;
+            /* very light */
+        }
+
+        #pickup-helper {
+            display: none;
+            margin-top: 6px;
+            font-size: 12px;
+            color: #64748b;
+            /* neutral gray */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Instructions Page -->
+    <div id="instructions-page">
+        <div class="container">
+            <div class="content-wrapper instructions-content">
+                <h1>
+                    Experiment Instructions Page <br><br>
+                    Understanding Web Interactions
+                </h1>
+
+                <div class="section">
+                    <h2>Welcome!</h2>
+                    <p>
+                        Thank you for participating in this study! We're exploring how people interact with various
+                        website features and make decisions online. Your insights will help improve website designs and
+                        user experiences.
+                    </p>
+                </div>
+                <div class="section">
+                    <h2>Before You Begin the Experiment</h2>
+                    <ol>
+                        <li>Please read each step carefully—there are no right or wrong answers.</li>
+                        <li>You'll be using a ride‐booking site called Quick Taxi.</li>
+                    </ol>
+                </div>
+
+                <div class="section">
+                    <h2>About Quick Taxi</h2>
+                    <p>On the Quick Taxi website, you can:</p>
+                    <ul>
+                        <li>Book rides quickly and easily.</li>
+                        <li>Find drivers near your location.</li>
+                        <li>
+                            Let the website detect your location <strong> automatically </strong> for a faster booking
+                            experience, or
+                            <strong> manually </strong> type your location if you prefer.
+                        </li>
+                    </ul>
+                </div>
+                <div class="section">
+                    <h2>Getting Started</h2>
+                    <ol>
+                        <!-- Step 1 -->
+                        <li>
+                            <strong>Visit the Website</strong>
+                            <ul class="nested-list">
+                                <li>
+                                    After reading this page, click <span class="important">"Agree"</span> and then
+                                    <span class="important">"Next"</span> to continue to the Quick Taxi website.
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Step 2 -->
+                        <li>
+                            <strong>Select Your Location</strong>
+                            <ul class="nested-list">
+                                <li>
+                                    If you'd like the site to detect your location, you can use the <strong> "Use My
+                                        Location" </strong> option. Otherwise, just type in your <strong> pick‐up and
+                                        drop‐off addresses</strong> .
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Step 3 (moved out of the nested list) -->
+                        <li>
+                            <strong>Book Your Ride</strong>
+                            <ul class="nested-list">
+                                <li>Click "Book Now" to confirm your trip.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+
+
+                <div class="section">
+                    <h2>Complete the Survey</h2>
+                    <ul>
+
+                        <li> Once your booking is confirmed, you'll be directed to <strong> a short survey </strong>
+                            about your experience. After finishing the survey, you'll find instructions on how to
+                            return to <strong> Prolific </strong> and collect your reward.
+                    </ul>
+                </div>
+
+
+                <div class="section">
+                    <h2>Confidentiality</h2>
+                    <ul>
+                        <li> Your responses will remain anonymous and will only be used for research purposes.</p>
+                        <li> All collected data will be kept confidential.</p>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>Consent</h2>
+                    <p>
+                        By continuing, you confirm that you meet the minimum age requirements for data processing
+                        consent
+                        in your country. You also grant permission for the University of California, Berkeley to use
+                        your responses in accordance with our Privacy Policy.
+                    </p>
+                    <p>
+                        If you wish to withdraw your consent or request the deletion of your responses, please contact
+                        us
+                        at <a href="mailto:egelman@icsi.berkeley.edu" class="contact">egelman@icsi.berkeley.edu</a>.
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h2>Consent Options</h2>
+                    <p>Please select one of the following options to proceed:</p>
+                    <div class="consent-options">
+                        <!-- Consent buttons now have type="button" -->
+                        <button type="button" id="agreeButton" class="button consent-button">
+                            Yes, I agree and want to continue
+                        </button>
+                        <button type="button" id="disagreeButton" class="button consent-button">
+                            No, I don't agree and don't want to continue
+                        </button>
+                    </div>
+                    <div id="consentMessage"></div>
+                </div>
+
+                <!-- Next button has type="button" -->
+                <button type="button" id="nextButton" class="button next-button" disabled>
+                    Next <span class="arrow">→</span>
+                </button>
+
+                <div class="section">
+                    <h2>Thank You!</h2>
+                    <p>
+                        We appreciate your time and effort. Your participation helps us better understand user
+                        preferences and improve online experiences.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main QuickTaxi Page -->
+    <div id="main-page">
+        <!-- Header Section -->
+        <header id="header">
+            <div id="header-container">
+                <div id="left-links">
+                    <a href="#" id="help-link">Help</a>
+                </div>
+                <h1 id="logo">QuickTaxi</h1>
+                <div id="right-links">
+                    <a href="#">Drive</a>
+                    <a href="#">Log in</a>
+                    <a href="#" id="signup-button">Sign up</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Get a Ride Form Section -->
+        <section id="get-ride">
+            <div id="ride-container">
+                <h1 id="ride-title">Request a ride</h1>
+                <div class="form-container">
+                    <div class="input-container">
+                        <label for="pickup-location"></label>
+                        <div class="input-wrapper">
+                            <span class="tooltip-left">Manually enter an address</span>
+                            <input type="text" id="pickup-location" name="pickup-location"
+                                placeholder="Enter Pickup location" autocomplete="off">
+                            <!-- "Allow location access" button has type="button" -->
+                            <button type="button" class="icon-button" id="allow-location-button">
+                                <span class="tooltip">Allow location access</span>
+                                <img src="location-icon.png" alt="Location Icon" class="location-icon">
+                            </button>
+                        </div>
+
+                        <!-- ✅ ADDED: helper text (hidden by default; shown only after Book Now attempt) -->
+                        <div id="pickup-helper">Enter a pickup location to enable "Book Now".</div>
+                    </div>
+                    <div class="input-container">
+                        <label for="dropoff-location"></label>
+                        <input type="text" id="dropoff-location" name="dropoff-location"
+                            placeholder="Enter Drop-off location" autocomplete="off">
+                    </div>
+
+                    <!-- Add this new code here -->
+                    <div class="time-controls">
+                        <div class="time-control-item" id="date-picker-container">
+                            <img src="calendar.png" alt="Calendar" class="control-icon">
+                            <input type="text" id="date-picker" placeholder="Today" value="Today" readonly>
+                        </div>
+
+                        <div class="time-control-item" id="time-picker-container">
+                            <img src="clock.png" alt="Clock" class="control-icon">
+                            <input type="text" id="time-picker" value="Now" readonly>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                    </div>
+                    <!-- "Book Now" button has type="button" -->
+                    <button type="button" id="book-now-button">
+                        Book Now
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Custom Dialog for Location Permission -->
+        <div id="custom-dialog" class="custom-dialog">
+            <div class="dialog-content">
+                <div class="dialog-header">
+                    <div class="dialog-header-left">
+                        <span class="dialog-title">quicktaxi.com wants to</span>
+                    </div>
+                    <!-- Dismiss button with type="button" -->
+                    <button type="button" class="close-dialog" onclick="handleLocationPermission('dismiss', event)">
+                        &times;
+                    </button>
+                </div>
+                <div class="dialog-message">
+                    <img src="location-icon1.png" alt="Location Icon" class="dialog-icon-small">
+                    <span>Use your location</span>
+                </div>
+
+                <div class="dialog-actions">
+                    <!-- Block and Allow buttons with type="button" -->
+                    <button type="button" class="dialog-button block-button"
+                        onclick="handleLocationPermission('block', event)">
+                        Block
+                    </button>
+                    <button type="button" class="dialog-button allow-button"
+                        onclick="handleLocationPermission('allow', event)">
+                        Allow
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Functionality Dialog for Location Permission -->
+        <div id="functionality-dialog" class="custom-dialog">
+            <div class="dialog-content">
+                <div class="dialog-header">
+                    <div class="dialog-header-left">
+                        <span class="dialog-title">quicktaxi.com wants to</span>
+                    </div>
+                    <!-- Dismiss button with type="button" -->
+                    <button type="button" class="close-dialog" onclick="handleLocationPermission('dismiss', event)">
+                        &times;
+                    </button>
+                </div>
+                <div class="dialog-message">
+                    <img src="location-icon1.png" alt="Location Icon" class="dialog-icon-small">
+                    <span>Use your location</span>
+                </div>
+
+                <!-- Functionality Section -->
+                <div class="functionality-section">
+                    <p>This capability will be used for :</p>
+
+                    <div class="functionality-item">
+                        <img src="functionality.png" alt="Functionality Icon" class="functionality-icon">
+                        <span class="functionality-title">Functionality</span>
+                    </div>
+
+                    <ul class="functionality-list">
+                        <li>Find nearby drivers</li>
+                    </ul>
+                </div>
+
+                <div class="dialog-actions">
+                    <!-- Block and Allow buttons with type="button" -->
+                    <button type="button" class="dialog-button block-button"
+                        onclick="handleLocationPermission('block', event)">
+                        Block
+                    </button>
+                    <button type="button" class="dialog-button allow-button"
+                        onclick="handleLocationPermission('allow', event)">
+                        Allow
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- New Third-Party Ads Dialog for Location Permission -->
+        <div id="ads-dialog" class="custom-dialog">
+            <div class="dialog-content">
+                <div class="dialog-header">
+                    <div class="dialog-header-left">
+                        <span class="dialog-title">quicktaxi.com wants to</span>
+                    </div>
+                    <!-- Dismiss button with type="button" -->
+                    <button type="button" class="close-dialog" onclick="handleLocationPermission('dismiss', event)">
+                        &times;
+                    </button>
+                </div>
+                <div class="dialog-message">
+                    <img src="location-icon1.png" alt="Location Icon" class="dialog-icon-small">
+                    <span>Use your location</span>
+                </div>
+                <!-- Third-Party Ads Section -->
+                <div class="functionality-section">
+                    <p>This capability will be used for :</p>
+                    <div class="functionality-item">
+                        <img src="third-party-ads.png" alt="Third-Party Ads Icon" class="functionality-icon">
+                        <span class="functionality-title">Third-Party Ads</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Shares location data with third parties to deliver ads</li>
+                    </ul>
+                </div>
+                <div class="dialog-actions">
+                    <!-- Block and Allow buttons with type="button" -->
+                    <button type="button" class="dialog-button block-button"
+                        onclick="handleLocationPermission('block', event)">
+                        Block
+                    </button>
+                    <button type="button" class="dialog-button allow-button"
+                        onclick="handleLocationPermission('allow', event)">
+                        Allow
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- New Third-Party Analytics Dialog for Location Permission -->
+        <div id="analytics-dialog" class="custom-dialog">
+            <div class="dialog-content">
+                <div class="dialog-header">
+                    <div class="dialog-header-left">
+                        <span class="dialog-title">quicktaxi.com wants to</span>
+                    </div>
+                    <!-- Dismiss button with type="button" -->
+                    <button type="button" class="close-dialog" onclick="handleLocationPermission('dismiss', event)">
+                        &times;
+                    </button>
+                </div>
+                <div class="dialog-message">
+                    <img src="location-icon1.png" alt="Location Icon" class="dialog-icon-small">
+                    <span>Use your location</span>
+                </div>
+                <!-- Third-Party Analytics Section -->
+                <div class="functionality-section">
+                    <p>This capability will be used for :</p>
+                    <div class="functionality-item">
+                        <img src="third-party-analytics.png" alt="Third-Party Analytics Icon"
+                            class="functionality-icon">
+                        <span class="functionality-title">Third-Party Analytics</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Shares location data with third parties to improve service performance</li>
+                    </ul>
+                </div>
+                <div class="dialog-actions">
+                    <!-- Block and Allow buttons with type="button" -->
+                    <button type="button" class="dialog-button block-button"
+                        onclick="handleLocationPermission('block', event)">
+                        Block
+                    </button>
+                    <button type="button" class="dialog-button allow-button"
+                        onclick="handleLocationPermission('allow', event)">
+                        Allow
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Combined Dialog (Functionality + Third-Party Ads) -->
+        <div id="combined-dialog" class="custom-dialog">
+            <div class="dialog-content">
+                <div class="dialog-header">
+                    <div class="dialog-header-left">
+                        <span class="dialog-title">quicktaxi.com wants to</span>
+                    </div>
+                    <button type="button" class="close-dialog" onclick="handleLocationPermission('dismiss', event)">
+                        &times;
+                    </button>
+                </div>
+                <div class="dialog-message">
+                    <img src="location-icon1.png" alt="Location Icon" class="dialog-icon-small">
+                    <span>Use your location</span>
+                </div>
+                <div class="functionality-section">
+                    <p>This capability will be used for :</p>
+
+                    <!-- Functionality section -->
+                    <div class="functionality-item">
+                        <img src="functionality.png" alt="Functionality Icon" class="functionality-icon">
+                        <span class="functionality-title">Functionality</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Find nearby drivers</li>
+                    </ul>
+
+                    <!-- Third-Party Ads section -->
+                    <div class="functionality-item">
+                        <img src="third-party-ads.png" alt="Third-Party Ads Icon" class="functionality-icon">
+                        <span class="functionality-title">Third-Party Ads</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Shares location data with third parties to deliver ads</li>
+                    </ul>
+                </div>
+                <div class="dialog-actions">
+                    <button type="button" class="dialog-button block-button"
+                        onclick="handleLocationPermission('block', event)">
+                        Block
+                    </button>
+                    <button type="button" class="dialog-button allow-button"
+                        onclick="handleLocationPermission('allow', event)">
+                        Allow
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Combined Dialog (Functionality + Third-Party Analytics) -->
+        <div id="combined-analytics-dialog" class="custom-dialog">
+            <div class="dialog-content">
+                <div class="dialog-header">
+                    <div class="dialog-header-left">
+                        <span class="dialog-title">quicktaxi.com wants to</span>
+                    </div>
+                    <button type="button" class="close-dialog" onclick="handleLocationPermission('dismiss', event)">
+                        &times;
+                    </button>
+                </div>
+                <div class="dialog-message">
+                    <img src="location-icon1.png" alt="Location Icon" class="dialog-icon-small">
+                    <span>Use your location</span>
+                </div>
+                <div class="functionality-section">
+                    <p>This capability will be used for :</p>
+
+                    <!-- Functionality section -->
+                    <div class="functionality-item">
+                        <img src="functionality.png" alt="Functionality Icon" class="functionality-icon">
+                        <span class="functionality-title">Functionality</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Find nearby drivers</li>
+                    </ul>
+
+                    <!-- Third-Party Analytics section -->
+                    <div class="functionality-item">
+                        <img src="third-party-analytics.png" alt="Third-Party Analytics Icon"
+                            class="functionality-icon">
+                        <span class="functionality-title">Third-Party Analytics</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Shares location data with third parties to improve service performance</li>
+                    </ul>
+                </div>
+                <div class="dialog-actions">
+                    <button type="button" class="dialog-button block-button"
+                        onclick="handleLocationPermission('block', event)">
+                        Block
+                    </button>
+                    <button type="button" class="dialog-button allow-button"
+                        onclick="handleLocationPermission('allow', event)">
+                        Allow
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Combined Dialog (Functionality + First-Party Ads) -->
+        <div id="combined-first-party-dialog" class="custom-dialog">
+            <div class="dialog-content">
+                <div class="dialog-header">
+                    <div class="dialog-header-left">
+                        <span class="dialog-title">quicktaxi.com wants to</span>
+                    </div>
+                    <button type="button" class="close-dialog" onclick="handleLocationPermission('dismiss', event)">
+                        &times;
+                    </button>
+                </div>
+                <div class="dialog-message">
+                    <img src="location-icon1.png" alt="Location Icon" class="dialog-icon-small">
+                    <span>Use your location</span>
+                </div>
+                <div class="functionality-section">
+                    <p>This capability will be used for :</p>
+
+                    <!-- Functionality section -->
+                    <div class="functionality-item">
+                        <img src="functionality.png" alt="Functionality Icon" class="functionality-icon">
+                        <span class="functionality-title">Functionality</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Find nearby drivers</li>
+                    </ul>
+
+                    <!-- First-Party Ads section -->
+                    <div class="functionality-item">
+                        <img src="first-party-ads.png" alt="First-Party Ads Icon" class="functionality-icon">
+                        <span class="functionality-title">First-Party Ads</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Deliver ads without sharing location data with third parties</li>
+                    </ul>
+                </div>
+                <div class="dialog-actions">
+                    <button type="button" class="dialog-button block-button"
+                        onclick="handleLocationPermission('block', event)">
+                        Block
+                    </button>
+                    <button type="button" class="dialog-button allow-button"
+                        onclick="handleLocationPermission('allow', event)">
+                        Allow
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Combined Dialog (Functionality + First-Party Analytics) -->
+        <div id="combined-first-party-analytics-dialog" class="custom-dialog">
+            <div class="dialog-content">
+                <div class="dialog-header">
+                    <div class="dialog-header-left">
+                        <span class="dialog-title">quicktaxi.com wants to</span>
+                    </div>
+                    <button type="button" class="close-dialog" onclick="handleLocationPermission('dismiss', event)">
+                        &times;
+                    </button>
+                </div>
+                <div class="dialog-message">
+                    <img src="location-icon1.png" alt="Location Icon" class="dialog-icon-small">
+                    <span>Use your location</span>
+                </div>
+                <div class="functionality-section">
+                    <p>This capability will be used for :</p>
+
+                    <!-- Functionality section -->
+                    <div class="functionality-item">
+                        <img src="functionality.png" alt="Functionality Icon" class="functionality-icon">
+                        <span class="functionality-title">Functionality</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Find nearby drivers</li>
+                    </ul>
+
+                    <!-- First-Party Analytics section -->
+                    <div class="functionality-item">
+                        <img src="first-party-analytics.png" alt="First-Party Analytics Icon"
+                            class="functionality-icon">
+                        <span class="functionality-title">First-Party Analytics</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Analyzes location data to improve service without third-party sharing</li>
+                    </ul>
+                </div>
+                <div class="dialog-actions">
+                    <button type="button" class="dialog-button block-button"
+                        onclick="handleLocationPermission('block', event)">
+                        Block
+                    </button>
+                    <button type="button" class="dialog-button allow-button"
+                        onclick="handleLocationPermission('allow', event)">
+                        Allow
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Dialog with Three Purposes -->
+        <div id="three-purposes-dialog" class="custom-dialog">
+            <div class="dialog-content">
+                <div class="dialog-header">
+                    <div class="dialog-header-left">
+                        <span class="dialog-title">quicktaxi.com wants to</span>
+                    </div>
+                    <button type="button" class="close-dialog" onclick="handleLocationPermission('dismiss', event)">
+                        &times;
+                    </button>
+                </div>
+                <div class="dialog-message">
+                    <img src="location-icon1.png" alt="Location Icon" class="dialog-icon-small">
+                    <span>Use your location</span>
+                </div>
+                <div class="functionality-section">
+                    <p>This capability will be used for :</p>
+
+                    <!-- Functionality section -->
+                    <div class="functionality-item">
+                        <img src="functionality.png" alt="Functionality Icon" class="functionality-icon">
+                        <span class="functionality-title">Functionality</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Find nearby drivers</li>
+                    </ul>
+
+                    <!-- Third-Party Ads section -->
+                    <div class="functionality-item">
+                        <img src="third-party-ads.png" alt="Third-Party Ads Icon" class="functionality-icon">
+                        <span class="functionality-title">Third-Party Ads</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Shares location data with third parties to deliver ads</li>
+                    </ul>
+
+                    <!-- Secondary Uses section -->
+                    <div class="functionality-item">
+                        <img src="secondary-uses.png" alt="Secondary Uses Icon" class="functionality-icon">
+                        <span class="functionality-title">Secondary Uses</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Purposes specified by their respective privacy policies</li>
+                    </ul>
+                </div>
+                <div class="dialog-actions">
+                    <button type="button" class="dialog-button block-button"
+                        onclick="handleLocationPermission('block', event)">
+                        Block
+                    </button>
+                    <button type="button" class="dialog-button allow-button"
+                        onclick="handleLocationPermission('allow', event)">
+                        Allow
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Dialog with Functionality, Third-Party Analytics, and Secondary Uses -->
+        <div id="functionality-analytics-secondary-dialog" class="custom-dialog">
+            <div class="dialog-content">
+                <div class="dialog-header">
+                    <div class="dialog-header-left">
+                        <span class="dialog-title">quicktaxi.com wants to</span>
+                    </div>
+                    <button type="button" class="close-dialog" onclick="handleLocationPermission('dismiss', event)">
+                        &times;
+                    </button>
+                </div>
+                <div class="dialog-message">
+                    <img src="location-icon1.png" alt="Location Icon" class="dialog-icon-small">
+                    <span>Use your location</span>
+                </div>
+                <div class="functionality-section">
+                    <p>This capability will be used for :</p>
+
+                    <!-- Functionality section -->
+                    <div class="functionality-item">
+                        <img src="functionality.png" alt="Functionality Icon" class="functionality-icon">
+                        <span class="functionality-title">Functionality</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Find nearby drivers</li>
+                    </ul>
+
+                    <!-- Third-Party Analytics section -->
+                    <div class="functionality-item">
+                        <img src="third-party-analytics.png" alt="Third-Party Analytics Icon"
+                            class="functionality-icon">
+                        <span class="functionality-title">Third-Party Analytics</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Shares location data with third parties to improve service performance</li>
+                    </ul>
+
+                    <!-- Secondary Uses section -->
+                    <div class="functionality-item">
+                        <img src="secondary-uses.png" alt="Secondary Uses Icon" class="functionality-icon">
+                        <span class="functionality-title">Secondary Uses</span>
+                    </div>
+                    <ul class="functionality-list">
+                        <li>Purposes specified by their respective privacy policies</li>
+                    </ul>
+                </div>
+                <div class="dialog-actions">
+                    <button type="button" class="dialog-button block-button"
+                        onclick="handleLocationPermission('block', event)">
+                        Block
+                    </button>
+                    <button type="button" class="dialog-button allow-button"
+                        onclick="handleLocationPermission('allow', event)">
+                        Allow
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Alert Dialog — appears after Allow/Block/Dismiss.
+             OK button only closes this alert and returns the user to the main page.
+             Survey Instructions appear later when the user clicks Book Now. -->
+        <div id="custom-alert" class="custom-alert" style="display: none;">
+            <div class="alert-content">
+                <div class="alert-header">
+                    <span class="alert-title">Location Access</span>
+                </div>
+                <span id="alert-message" class="alert-message"></span>
+                <div class="alert-actions">
+                    <button type="button" class="next-alert-button"
+                        onclick="document.getElementById('custom-alert').style.display = 'none';">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Survey Instructions Dialog -->
+        <div id="survey-instructions" class="custom-alert" style="display: none;">
+            <div class="alert-content">
+                <div class="alert-header">
+                    <span class="alert-title">Survey Instructions</span>
+                </div>
+                <div class="alert-message">
+                    <p>Thank you for making your choice! To complete this task:</p>
+                    <ol>
+                        <li> Click the link below to fill out a short survey about web privacy preferences.</li>
+                        <li> Once you complete the survey, use the link at the end to return to Prolific and collect
+                            your reward.</li>
+                    </ol>
+                    <p class="survey-link">
+                        <a href="https://qualtrics.com/" target="_blank" id="survey-link">Go to Survey</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <script src="combinedscript.js"></script>
+
+        <!-- ✅ ADDED: show helper ONLY after they TRY Book Now -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const pickup = document.getElementById("pickup-location");
+                const helper = document.getElementById("pickup-helper");
+                const bookNow = document.getElementById("book-now-button");
+
+                if (!pickup || !helper || !bookNow) return;
+
+                let helperArmed = false; // becomes true only after the user attempts Book Now
+
+                function shouldShowHint() {
+                    return helperArmed && !pickup.disabled && pickup.value.trim() === "" && bookNow.disabled;
+                }
+
+                function renderHint() {
+                    if (shouldShowHint()) {
+                        pickup.classList.add("needs-input");
+                        helper.style.display = "block";
+                    } else {
+                        pickup.classList.remove("needs-input");
+                        helper.style.display = "none";
+                    }
+                }
+
+                // Arm + render only when they attempt Book Now
+                bookNow.addEventListener("click", function () {
+                    helperArmed = true;
+                    renderHint();
+                });
+
+                // After it's armed, update based on their typing/focus
+                pickup.addEventListener("input", renderHint);
+                pickup.addEventListener("focus", renderHint);
+                pickup.addEventListener("blur", renderHint);
+
+                // Do NOT show anything on load (even less nudging)
+            });
+        </script>
+    </div>
+</body>
+
+</html>
